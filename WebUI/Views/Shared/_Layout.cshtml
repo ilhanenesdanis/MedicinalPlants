@@ -18,6 +18,7 @@
     <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style">
     <link href="/assets/css/vendor/dataTables.bootstrap5.css" rel="stylesheet" type="text/css">
     <link href="/assets/css/vendor/responsive.bootstrap5.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @RenderSection("Links",required:false)
 </head>
@@ -29,22 +30,22 @@
         <div class="leftside-menu">
 
             <!-- LOGO -->
-            <a href="index.html" class="logo text-center logo-light">
+            <a asp-controller="Plant" asp-action="Index" class="logo text-center logo-light">
                 <span class="logo-lg">
-                    <img src="assets/images/logo.png" alt="" height="16">
+                    <img src="/assets/images/logo.png" alt="" height="16">
                 </span>
                 <span class="logo-sm">
-                    <img src="assets/images/logo_sm.png" alt="" height="16">
+                    <img src="/assets/images/logo_sm.png" alt="" height="16">
                 </span>
             </a>
 
             <!-- LOGO -->
-            <a href="index.html" class="logo text-center logo-dark">
+            <a asp-controller="Plant" asp-action="Index" class="logo text-center logo-dark">
                 <span class="logo-lg">
-                    <img src="assets/images/logo-dark.png" alt="" height="16">
+                    <img src="/assets/images/logo-dark.png" alt="" height="16">
                 </span>
                 <span class="logo-sm">
-                    <img src="assets/images/logo_sm_dark.png" alt="" height="16">
+                    <img src="/assets/images/logo_sm_dark.png" alt="" height="16">
                 </span>
             </a>
 
@@ -53,10 +54,18 @@
                 <!--- Sidemenu -->
                 <ul class="side-nav">
 
-                    <li class="side-nav-title side-nav-item">Navigation</li>
-
-
-                    <li class="side-nav-title side-nav-item">Apps</li>
+                     <li class="side-nav-item">
+                        <a asp-controller="Plant" asp-action="Index" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Bitkiler </span>
+                        </a>
+                    </li>
+                    <li class="side-nav-item">
+                        <a asp-controller="PlantCategory" asp-action="Index" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Kategoriler </span>
+                        </a>
+                    </li>
 
                 </ul>
                 <div class="clearfix"></div>
@@ -108,9 +117,9 @@
     <div class="rightbar-overlay"></div>
     <!-- /End-bar -->
     <!-- bundle -->
-    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/assets/js/app.min.js"></script>
-
+    <script src="/assets/js/vendor.min.js"></script>
     <!-- third party js -->
     <script src="/assets/js/vendor/apexcharts.min.js"></script>
     <script src="/assets/js/vendor/jquery-jvectormap-1.2.2.min.js"></script>
@@ -125,9 +134,10 @@
 
     <!-- Datatable Init js -->
     <script src="/assets/js/pages/demo.datatable-init.js"></script>
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
     <!-- end demo js-->
     @RenderSection("Scripts",required:false)

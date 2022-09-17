@@ -50,7 +50,7 @@ namespace Service.Service
 
         public List<PlantsDto> GetAllPlants()
         {
-            return _plantsRepository.GetAllPlants().Where(x=>x.Status==true).Select(x => 
+            return _plantsRepository.GetAllPlants().Select(x => 
             new PlantsDto { CategoryName = x.PlantCategory.Name, ImagePath = x.ImagePath, Name = x.Name, PlantId = x.Id ,CreateDate=x.CreateDate,Status=x.Status}).ToList();
         }
     }

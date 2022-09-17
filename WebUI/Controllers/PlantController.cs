@@ -28,7 +28,15 @@ namespace WebUI.Controllers
         }
         public JsonResult DeletePlant(int id)
         {
-
+            var url = _configuration["BaseURL"] + UrlStrings.DeletePlant + id;
+            var result = _apiHandler.GetApi<ResultDTO<PlantsDto>>(url);
+            return Json(1);
+        }
+        public JsonResult ChangeStatus(int id)
+        {
+            var url = _configuration["BaseURL"] + UrlStrings.ChangeStatus + id;
+            var result = _apiHandler.GetApi<ResultDTO<PlantsDto>>(url);
+            return Json(1);
         }
     }
 }

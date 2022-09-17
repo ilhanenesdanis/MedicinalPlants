@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-sm-5">
-                            <a href="javascript:void(0)" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> BitKi Ekle</a>
+                            <button type="button" class="btn btn-danger mb-2" data-bs-toggle="modal" data-bs-target="#bs-example-modal-lg">BitKi Ekle</button>
                         </div>
                     </div>
                     @if (Model.Status == true)
@@ -34,7 +34,7 @@
                             <tbody>
                                 @foreach (var item in Model.DataList)
                                 {
-                                    <tr>
+                                    <tr id="data_@item.PlantId">
                                         <td>
                                             <img src="@item.ImagePath" alt="@item.Name" title="contact-img" class="rounded me-3" height="48">
                                             <p class="m-0 d-inline-block align-middle font-16">
@@ -50,8 +50,8 @@
                                         </td>
                                         <td>
                                             <div>
-                                                <input type="checkbox" onchange="ChangeStatus(@item.PlantId)" id="switch02" checked="@(item.Status==true?true:false)" data-switch="success">
-                                                <label for="switch02" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                                <input type="checkbox" onchange="ChangeStatus(@item.PlantId)" id="switch_@item.PlantId" checked="@(item.Status==true?true:false)" data-switch="success">
+                                                <label for="switch_@item.PlantId" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
                                             </div>
                                         </td>
 
@@ -70,13 +70,50 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Bitki Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script>
         function DeletePlant(id) {
-            console.log("Silindi");
+            Swal.fire({
+                title: 'Silmek İstediğinize Emin Misiniz',
+                showDenyButton: true,
+                confirmButtonText: 'Sil',
+                denyButtonText: `İptal`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Plant/DeletePlant',
+                        data: { id: id },
+                        success: function() {
+                            Swal.fire('Silindi!', '', 'success');
+                            $('#data_' + id).remove();
+                        }
+                    });
+
+                }
+            })
+
         }
         function ChangeStatus(id) {
-            console.log("Güncellendi");
+            $.ajax({
+                url: '/Plant/ChangeStatus',
+                data: { id: id },
+                success: function() {
+                    Swal.fire('İşlem Başarılı!', '', 'success')
+                }
+            });
         }
     </script>
 }

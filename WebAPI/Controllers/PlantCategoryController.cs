@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using AutoMapper;
+using DTO;
 using DTO.PlantCategory;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -11,10 +12,11 @@ namespace WebAPI.Controllers
     public class PlantCategoryController : Controller
     {
         private readonly IPlantsCategoryService _plantsCategoryService;
-        
-        public PlantCategoryController(IPlantsCategoryService plantsCategoryService)
+        private readonly IMapper _mapper;
+        public PlantCategoryController(IPlantsCategoryService plantsCategoryService, IMapper mapper)
         {
             _plantsCategoryService = plantsCategoryService;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult GetAllCategory()
@@ -25,6 +27,28 @@ namespace WebAPI.Controllers
                 var SuccessResult = new ResultDTO<PlantsCategoryList>()
                 {
                     DataList = data,
+                    Status = true,
+                    Message = Messages.ListelemeBaşarılı
+                };
+                return Ok(SuccessResult);
+            }
+            var ErrorResult = new ResultDTO<PlantsCategoryList>()
+            {
+                Status = false,
+                Message = Messages.KayıtBulunamadı
+            };
+            return Ok(ErrorResult);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetByCategoryId(int id)
+        {
+            var data = _plantsCategoryService.GetById(id);
+            if (data != null)
+            {
+                var map = _mapper.Map<PlantsCategoryList>(data);
+                var SuccessResult = new ResultDTO<PlantsCategoryList>()
+                {
+                    Data = map,
                     Status = true,
                     Message = Messages.ListelemeBaşarılı
                 };
@@ -57,7 +81,7 @@ namespace WebAPI.Controllers
             };
             return Ok(Error);
         }
-        [HttpPut]
+        [HttpPost]
         public IActionResult UpdateCategory(UpdatePlantsCategory updatePlants)
         {
             var status = _plantsCategoryService.UpdatePlantCategory(updatePlants);
@@ -77,7 +101,7 @@ namespace WebAPI.Controllers
             };
             return Ok(Error);
         }
-        [HttpDelete("{Id}")]
+        [HttpGet("{Id}")]
         public IActionResult RemoveCategory(int Id)
         {
             var getById = _plantsCategoryService.GetById(Id);
@@ -98,7 +122,7 @@ namespace WebAPI.Controllers
             };
             return Ok(Error);
         }
-        [HttpPut("{Id}")]
+        [HttpGet("{Id}")]
         public IActionResult ChangeStatus(int Id)
         {
             var changeStatus = _plantsCategoryService.ChangeStatus(Id);

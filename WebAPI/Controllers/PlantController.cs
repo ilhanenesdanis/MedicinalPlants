@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
             };
             return Ok(errorResult);
         }
-        [HttpDelete("{id}")]
+        [HttpGet("{id}")]
         public IActionResult DeletePlant(int id)
         {
             var result = _plantService.GetById(id);
@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
             };
             return Ok(errorResult);
         }
-        [HttpPut]
+        [HttpGet("{id}")]
         public IActionResult ChangeStatus(int id)
         {
             var result = _plantService.GetById(id);

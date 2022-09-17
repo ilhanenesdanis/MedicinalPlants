@@ -1,0 +1,155 @@
+﻿@model ResultDTO<PlantsCategoryList>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-5">
+                        <button type="button" class="btn btn-danger mb-2" data-bs-toggle="modal" data-bs-target="#bs-example-modal-lg">Kategori Ekle</button>
+                    </div>
+                </div>
+                @if (Model.Status == true)
+                {
+                    <div class="table-responsive">
+                        <table id="basic-datatable" class="table dt-responsive nowrap w-100">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Kategori Adı</th>
+                                    <th>Eklenme Tarihi</th>
+                                    <th>Aktif/Pasif</th>
+                                    <th style="width: 85px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DataList)
+                                {
+                                    <tr id="data_@item.Id">
+                                        <td>
+                                            @item.Name
+                                        </td>
+                                        <td>
+                                            @item.CreateDate.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <input type="checkbox" onchange="ChangeStatusCategory(@item.Id)" id="switch_@item.Id" checked="@(item.Status==true?true:false)" data-switch="success">
+                                                <label for="switch_@item.Id" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                            </div>
+                                        </td>
+
+                                        <td class="table-action">
+                                            <a onclick="updateCategory(@item.Id)" class="action-icon" style="cursor:pointer;"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            <a onclick="DeletePlantCategory(@item.Id)" class="action-icon" style="cursor:pointer;"> <i class="mdi mdi-delete"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Bitki Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddPlantCategory" asp-controller="PlantCategory"
+                      data-ajax="true" data-ajax-method="POST"
+                      data-ajax-success="OnSuccess">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="simpleinput" class="form-label">Text</label>
+                                <input type="text" name="Name" id="simpleinput" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-end">
+                            <button type="submit" class="btn btn-success">Kaydet</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Bitki Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="UpdateCategory" asp-controller="PlantCategory"
+                      data-ajax="true" data-ajax-method="POST"
+                      data-ajax-success="OnSuccessUpdate">
+                    <div id="updateArea"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function OnSuccess() {
+            $('#bs-example-modal-lg').modal('hide');
+            Swal.fire('Kategori Eklendi!', '', 'success');
+            window.location.reload();
+        }
+        function OnSuccessUpdate() {
+            $('#updateModal').modal('hide');
+            Swal.fire('Kategori Güncellendi!', '', 'success');
+            window.location.reload();
+        }
+        function ChangeStatusCategory(id) {
+            $.ajax({
+                url: '/PlantCategory/ChangeStatusCategory',
+                data: { id: id },
+                success: function() {
+                    Swal.fire('İşlem Başarılı!', '', 'success')
+                }
+            });
+        }
+        function DeletePlantCategory(id) {
+            Swal.fire({
+                title: 'Silmek İstediğinize Emin Misiniz',
+                showDenyButton: true,
+                confirmButtonText: 'Sil',
+                denyButtonText: `İptal`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/PlantCategory/DeletePlantCategory',
+                        data: { id: id },
+                        success: function() {
+                            Swal.fire('Silindi!', '', 'success');
+                            $('#data_' + id).remove();
+                        }
+                    });
+
+                }
+            })
+        }
+        function updateCategory(id) {
+            $.ajax({
+                url: '/PlantCategory/UpdatePlantCategory',
+                data: { id: id },
+                success: function(data) {
+                    $('#updateArea').empty();
+                    $('#updateArea').html(data);
+                    $('#updateModal').modal('show');
+                }
+            })
+        }
+    </script>
+}

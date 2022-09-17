@@ -45,7 +45,7 @@ namespace Service.Service
 
         public List<PlantsCategoryList> GetPlantsCategory()
         {
-            return _plantsCategoryRepository.GetBy(x => x.Status == true).Select(x => new PlantsCategoryList { Id = x.Id, Name = x.Name }).ToList();
+            return _plantsCategoryRepository.GetAll().Select(x => new PlantsCategoryList { Id = x.Id, Name = x.Name,CreateDate=x.CreateDate,Status=x.Status }).ToList();
         }
 
         public int UpdatePlantCategory(UpdatePlantsCategory updatePlants)
