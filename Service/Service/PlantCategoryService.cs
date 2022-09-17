@@ -48,6 +48,11 @@ namespace Service.Service
             return _plantsCategoryRepository.GetAll().Select(x => new PlantsCategoryList { Id = x.Id, Name = x.Name,CreateDate=x.CreateDate,Status=x.Status }).ToList();
         }
 
+        public List<PlantsCategoryList> GetPlantsCategoryByDropdown()
+        {
+            return _plantsCategoryRepository.GetAll().Select(x => new PlantsCategoryList { Id = x.Id, Name = x.Name }).ToList();
+        }
+
         public int UpdatePlantCategory(UpdatePlantsCategory updatePlants)
         {
             var GetById = _plantsCategoryRepository.GetById(updatePlants.Id);

@@ -33,12 +33,14 @@ namespace Service
             services.AddScoped<IPlantCategoryRepository, PlantCategoryRepository>();
             services.AddScoped<IPlantsImageRepository, PlantsImageRepository>();
             services.AddScoped<IPlantsRepository, PlantsRepository>();
-
-
+            services.AddScoped<IDistrictRepository, DisctrictRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
             //service
             services.AddScoped<IPlantsService,PlantsService>();
             services.AddScoped<IPlantsCategoryService, PlantCategoryService>();
             services.AddScoped<IPlantsImageService, PlantsImageService>();
+            services.AddScoped<IDistrictService, DisctrictService>();
+            services.AddScoped<ICityService, CityService>();
         }
     }
 }

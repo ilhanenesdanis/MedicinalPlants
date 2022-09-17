@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Plants
+﻿namespace DTO.Plants
 {
     public class AddPlantDto
     {
@@ -13,6 +7,7 @@ namespace DTO.Plants
         public string SmallContent { get; set; }
         public string ImagePath { get; set; }
         public int CategoryId { get; set; }
-        public List<string> ImageList { get; set; }
+        public int CityId { get; set; }
+        public int DisctrictId { get; set; }
     }
 }

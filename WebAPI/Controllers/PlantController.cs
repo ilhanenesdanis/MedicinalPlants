@@ -1,4 +1,8 @@
-﻿using DTO;
+﻿using AutoMapper;
+using Core.Entity;
+using DTO;
+using DTO.City;
+using DTO.Disctrict;
 using DTO.Plants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +17,16 @@ namespace WebAPI.Controllers
     {
         private readonly IPlantsService _plantService;
         private readonly IPlantsImageService _plantsImageService;
-        public PlantController(IPlantsService plantService, IPlantsImageService plantsImageService)
+        private readonly ICityService _cityService;
+        private readonly IMapper _mapper;
+        private readonly IDistrictService _districtService;
+        public PlantController(IPlantsService plantService, IPlantsImageService plantsImageService, IMapper mapper, IDistrictService districtService, ICityService cityService)
         {
             _plantService = plantService;
             _plantsImageService = plantsImageService;
+            _mapper = mapper;
+            _districtService = districtService;
+            _cityService = cityService;
         }
         [HttpGet]
         public IActionResult GetAllPlants()
@@ -27,6 +37,28 @@ namespace WebAPI.Controllers
                 var successResult = new ResultDTO<PlantsDto>()
                 {
                     DataList = data,
+                    Message = Messages.ListelemeBaşarılı,
+                    Status = true
+                };
+                return Ok(successResult);
+            }
+            var errorResult = new ResultDTO<PlantsDto>()
+            {
+                Message = Messages.KayıtBulunamadı,
+                Status = false
+            };
+            return Ok(errorResult);
+        }
+        [HttpGet("{Id}")]
+        public IActionResult GetPlants(int Id)
+        {
+            var data = _plantService.GetByPlantsId(Id);
+            if (data!=null)
+            {
+                var map=_mapper.Map<PlantsDto>(data);
+                var successResult = new ResultDTO<PlantsDto>()
+                {
+                    Data = map,
                     Message = Messages.ListelemeBaşarılı,
                     Status = true
                 };
@@ -103,5 +135,98 @@ namespace WebAPI.Controllers
             };
             return Ok(errorResult);
         }
+        [HttpGet]
+        public IActionResult GetCityList()
+        {
+            var data = _cityService.GetAll();
+            if (data.Count > 0)
+            {
+                var map = _mapper.Map<List<CityDto>>(data);
+                var successResult = new ResultDTO<CityDto>()
+                {
+                    DataList = map,
+                    Message = Messages.ListelemeBaşarılı,
+                    Status = true
+                };
+                return Ok(successResult);
+            }
+            var errorResult = new ResultDTO<CityDto>()
+            {
+                Message = Messages.KayıtBulunamadı,
+                Status = false
+            };
+            return Ok(errorResult);
+            
+        }
+        [HttpGet("{Id}")]
+        public IActionResult GetDisctrict(int Id)
+        {
+            var data = _districtService.GetAll().Where(x => x.CityId == Id).ToList();
+            if (data.Count > 0)
+            {
+                var map = _mapper.Map<List<DisctrictDto>>(data);
+                var successResult = new ResultDTO<DisctrictDto>()
+                {
+                    DataList = map,
+                    Message = Messages.ListelemeBaşarılı,
+                    Status = true
+                };
+                return Ok(successResult);
+            }
+            var errorResult = new ResultDTO<DisctrictDto>()
+            {
+                Message = Messages.KayıtBulunamadı,
+                Status = false
+            };
+            return Ok(errorResult);
+        }
+        [HttpGet]
+        public IActionResult GetAllDisctrict()
+        {
+            var data = _districtService.GetAll().ToList();
+            if (data.Count > 0)
+            {
+                var map = _mapper.Map<List<DisctrictDto>>(data);
+                var successResult = new ResultDTO<DisctrictDto>()
+                {
+                    DataList = map,
+                    Message = Messages.ListelemeBaşarılı,
+                    Status = true
+                };
+                return Ok(successResult);
+            }
+            var errorResult = new ResultDTO<DisctrictDto>()
+            {
+                Message = Messages.KayıtBulunamadı,
+                Status = false
+            };
+            return Ok(errorResult);
+        }
+        [HttpPost]
+        public IActionResult Update(PlantsDto plantsDto)
+        {
+            var GetPlants = _plantService.GetById(plantsDto.PlantId);
+            if (GetPlants != null)
+            {
+                Plants plants = new Plants()
+                {
+                    CategoryId = plantsDto.CategoryId,
+                    CityId = plantsDto.CityId,
+                    DisctrictId = plantsDto.DisctrictId,
+                    Content = plantsDto.Content,
+                    CreateDate = GetPlants.CreateDate,
+                    Id = GetPlants.Id,
+                    ImagePath = plantsDto.ImagePath,
+                    Name = plantsDto.Name,
+                    SmallContent = plantsDto.SmallContent,
+                    Status = GetPlants.Status,
+                    UpdateDate = DateTime.Now
+                };
+                _plantService.Update(plants);
+                return Ok();
+            }
+            return Ok();
+        }
+
     }
 }

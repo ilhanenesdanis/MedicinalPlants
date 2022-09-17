@@ -28,30 +28,28 @@ namespace Service.Service
             mapping.CreateDate = DateTime.Now;
             _plantsRepository.Add(mapping);
             var status = _unitOfWork.SaveChanges();
-            if (addPlant.ImageList.Count > 0)
-            {
-                foreach (var item in addPlant.ImageList)
-                {
-                    PlantsImage plants = new PlantsImage()
-                    {
-                        CreateDate = DateTime.Now,
-                        ImagePath = item,
-                        PlantId = mapping.Id,
-                        Status = true,
-                        UpdateDate = DateTime.Now,
-
-                    };
-                    _plantsImageRepository.Add(plants);
-                }
-                var save = _unitOfWork.SaveChanges();
-            }
             return status;
         }
 
         public List<PlantsDto> GetAllPlants()
         {
-            return _plantsRepository.GetAllPlants().Select(x => 
-            new PlantsDto { CategoryName = x.PlantCategory.Name, ImagePath = x.ImagePath, Name = x.Name, PlantId = x.Id ,CreateDate=x.CreateDate,Status=x.Status}).ToList();
+            return _plantsRepository.GetAllPlants().Select(x =>
+            new PlantsDto { CategoryName = x.PlantCategory.Name, ImagePath = x.ImagePath, Name = x.Name, PlantId = x.Id, CreateDate = x.CreateDate, Status = x.Status }).ToList();
+        }
+
+        public PlantsDto GetByPlantsId(int id)
+        {
+            return _plantsRepository.GetBy(x => x.Id == id).Select(x => new PlantsDto
+            {
+                CategoryId=x.CategoryId,
+                CityId=x.CityId,
+                Content=x.Content,
+                DisctrictId=x.DisctrictId,
+                Name=x.Name,
+                ImagePath=x.ImagePath,
+                PlantId=x.Id,
+                SmallContent=x.SmallContent
+            }).FirstOrDefault();
         }
     }
 }

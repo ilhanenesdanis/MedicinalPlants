@@ -28,19 +28,19 @@ namespace WebUI.Controllers
         {
             var url = _configuration["BaseURL"] + UrlStrings.AddNewCategory;
             var result = _apiHandler.PostApi<ResultDTO<AddPlantCategoryDto>>(addPlantCategory, url);
-            return Json(1);
+            return Json(new { success = true });
         }
         public JsonResult ChangeStatusCategory(int id)
         {
             var url = _configuration["BaseURL"] + UrlStrings.CategoryChangeStatus + id;
             var response = _apiHandler.GetApi<ResultDTO<AddPlantCategoryDto>>(url);
-            return Json(1);
+            return Json(new { success = true });
         }
         public JsonResult DeletePlantCategory(int id)
         {
             var url = _configuration["BaseURL"] + UrlStrings.RemoveCategory + id;
             var response = _apiHandler.GetApi<ResultDTO<AddPlantCategoryDto>>(url);
-            return Json(1);
+            return Json(new { success = true });
         }
         public IActionResult UpdatePlantCategory(int id)
         {
@@ -53,7 +53,7 @@ namespace WebUI.Controllers
         {
             var url = _configuration["BaseURL"] + UrlStrings.UpdateCategory;
             var response = _apiHandler.PostApi<ResultDTO<AddPlantCategoryDto>>(updatePlants, url);
-            return Json(1);
+            return Json(new { success = true });
         }
     }
 }

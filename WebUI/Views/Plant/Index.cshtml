@@ -36,7 +36,7 @@
                                 {
                                     <tr id="data_@item.PlantId">
                                         <td>
-                                            <img src="@item.ImagePath" alt="@item.Name" title="contact-img" class="rounded me-3" height="48">
+                                            <img src="/images/@item.ImagePath" alt="@item.Name" title="contact-img" class="rounded me-3" height="48">
                                             <p class="m-0 d-inline-block align-middle font-16">
                                                 <a href="javascript:void(0)" class="text-body">@item.Name</a>
                                                 <br>
@@ -56,7 +56,7 @@
                                         </td>
 
                                         <td class="table-action">
-                                            <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            <a onclick="UpdateModal(@item.PlantId)" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
                                             <a onclick="DeletePlant(@item.PlantId)" class="action-icon" style="cursor:pointer;"> <i class="mdi mdi-delete"></i></a>
                                         </td>
                                     </tr>
@@ -78,13 +78,90 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body">
-               
+                <form asp-action="AddPlant" asp-controller="Plant"
+                      data-ajax="true" data-ajax-method="POST"
+                      data-ajax-success="OnSuccess" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="example-select" class="form-label">Kategorisi</label>
+                                <select class="form-select" name="CategoryId" id="CategorySelect">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="example-select" class="form-label">Bulunduğu Şehir</label>
+                                <select class="form-select" name="CityId" id="CitySelect">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="example-select" class="form-label">Bulunduğu Bölge</label>
+                                <select class="form-select" name="DisctrictId" id="DisctrictSelect">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="simpleinput" class="form-label">Bitki Adı</label>
+                                <input type="text" name="Name" id="simpleinput" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="example-textarea" class="form-label">Kısa Açıklama</label>
+                                <textarea class="form-control" id="example-textarea" name="SmallContent" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="x" class="form-label">Açıklama</label>
+                                <textarea id="summernote" name="Content"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="mb-3">
+                                <label for="example-fileinput" class="form-label">Bitki Görseli</label>
+                                <input type="file" id="example-fileinput" name="file" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-end">
+                            <button type="submit" class="btn btn-success">Kaydet</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Bitki Güncelle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Update" asp-controller="Plant"
+                      data-ajax="true" data-ajax-method="POST"
+                      data-ajax-success="OnSuccess" enctype="multipart/form-data">
+                    <div class="row" id="UpdateArea">
+                        
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 @section Scripts{
     <script>
+        function OnSuccess() {
+            Swal.fire('Yeni Kayıt Eklendi!', '', 'success');
+            $('#bs-example-modal-lg').modal('hide');
+            window.location.reload();
+        }
         function DeletePlant(id) {
             Swal.fire({
                 title: 'Silmek İstediğinize Emin Misiniz',
@@ -112,6 +189,54 @@
                 data: { id: id },
                 success: function() {
                     Swal.fire('İşlem Başarılı!', '', 'success')
+                }
+            });
+        }
+        $('#CitySelect').change(function() {
+            var id = $('#CitySelect').val();
+            $.ajax({
+                url: '/Plant/DisctrictList',
+                data: { id: id },
+                success: function(data) {
+                    $('#DisctrictSelect').empty();
+                    $('#DisctrictSelect').append("<option>Bölge Seçiniz</option>")
+                    for (var i = 0; i <= data.length; i++) {
+                        $('#DisctrictSelect').append('<option value="' + data[i].id + '">' + data[i].districtName + '</option>');
+                    }
+                }
+            })
+        });
+        $(document).ready(function() {
+            $('#summernote').summernote();
+            $.ajax({
+                url: '/Plant/GetCategoryList',
+                success: function(data) {
+                    $('#CategorySelect').empty();
+                    $('#CategorySelect').append("<option>Kategori Seçiniz</option>");
+                    for (var i = 0; i <= data.length; i++) {
+                        $('#CategorySelect').append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+            $.ajax({
+                url: '/Plant/GetCityList',
+                success: function(data) {
+                    $('#CitySelect').empty();
+                    $('#CitySelect').append("<option>Şehir Seçiniz</option>")
+                    for (var i = 0; i <= data.length; i++) {
+                        $('#CitySelect').append('<option value="' + data[i].id + '">' + data[i].cityName + '</option>');
+                    }
+                }
+            })
+        });
+        function UpdateModal(id) {
+            $.ajax({
+                url: '/Plant/UpdatePlants',
+                data: { id: id },
+                success: function(data) {
+                    $('#UpdateArea').empty();
+                    $('#UpdateArea').html(data);
+                    $('#updateModal').modal('show');
                 }
             });
         }

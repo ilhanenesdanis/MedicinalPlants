@@ -142,5 +142,26 @@ namespace WebAPI.Controllers
             };
             return Ok(Error);
         }
+        [HttpGet]
+        public IActionResult GetPlantsCategoryByDropdown()
+        {
+            var data = _plantsCategoryService.GetPlantsCategoryByDropdown();
+            if (data != null)
+            {
+                var SuccessResult = new ResultDTO<PlantsCategoryList>()
+                {
+                    DataList = data,
+                    Status = true,
+                    Message = Messages.ListelemeBaşarılı
+                };
+                return Ok(SuccessResult);
+            }
+            var ErrorResult = new ResultDTO<PlantsCategoryList>()
+            {
+                Status = false,
+                Message = Messages.KayıtBulunamadı
+            };
+            return Ok(ErrorResult);
+        }
     }
 }

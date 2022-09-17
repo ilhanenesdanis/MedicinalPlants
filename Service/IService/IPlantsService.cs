@@ -7,6 +7,7 @@ namespace Service.IService
     public interface IPlantsService : IService<Plants>
     {
         List<PlantsDto> GetAllPlants();
+        PlantsDto GetByPlantsId(int id);
         int AddPlant(AddPlantDto addPlant);
     }
 }

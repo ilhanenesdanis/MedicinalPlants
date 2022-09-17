@@ -1,0 +1,92 @@
+﻿@model PlantUpdateModel
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="example-select" class="form-label">Kategorisi</label>
+        <select class="form-select" name="CategoryId" id="CategorySelect">
+            @foreach (var item in Model.Category)
+            {
+                if (item.Id == Model.Plants.CategoryId)
+                {
+                    <option value="@item.Id" selected>@item.Name</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="example-select" class="form-label">Bulunduğu Şehir</label>
+        <select class="form-select" name="CityId" id="CitySelect">
+            @foreach (var item in Model.City)
+            {
+                if (item.Id == Model.Plants.CityId)
+                {
+                    <option value="@item.Id" selected>@item.CityName</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.CityName</option>
+                }
+
+            }
+        </select>
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="example-select" class="form-label">Bulunduğu Bölge</label>
+        <select class="form-select" name="DisctrictId" id="DisctrictSelect">
+            @foreach (var item in Model.disctricts)
+            {
+                if (item.Id == Model.Plants.DisctrictId)
+                {
+                    <option value="@item.Id" selected>@item.DistrictName</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.DistrictName</option>
+                }
+
+            }
+        </select>
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="simpleinput" class="form-label">Bitki Adı</label>
+        <input type="text" name="Name" id="simpleinput" value="@Model.Plants.Name" class="form-control">
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="example-textarea" class="form-label">Kısa Açıklama</label>
+        <textarea class="form-control" id="example-textarea" name="SmallContent" rows="5">@Model.Plants.SmallContent</textarea>
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <div class="mb-3">
+        <label for="x" class="form-label">Açıklama</label>
+        <textarea id="summernoteUpdate" name="Content">@Model.Plants.Content</textarea>
+    </div>
+</div>
+<div class="col-md-12 mb-2">
+    <img src="/images/@Model.Plants.ImagePath" style="width:500px;height:500px;" />
+    <input type="hidden" value="@Model.Plants.ImagePath" name="ImagePath" />
+    <input type="hidden" value="@Model.Plants.PlantId" name="PlantId" />
+    <div class="mb-3">
+        <label for="example-fileinput" class="form-label">Bitki Görseli</label>
+        <input type="file" id="example-fileinput" name="file" class="form-control">
+    </div>
+</div>
+<div class="col-md-12 text-end">
+    <button type="submit" class="btn btn-success">Kaydet</button>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#summernoteUpdate').summernote();
+    })
+</script>

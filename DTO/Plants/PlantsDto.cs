@@ -16,5 +16,9 @@ namespace DTO.Plants
         public string CategoryName { get; set; }
         public DateTime CreateDate { get; set; }
         public bool Status { get; set; }
+        public int CategoryId { get; set; }
+        public int CityId { get; set; }
+        public int DisctrictId { get; set; }
+
     }
 }
